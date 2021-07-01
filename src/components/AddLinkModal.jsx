@@ -4,11 +4,12 @@ import { mdiClose } from '@mdi/js';
 
 import styled from 'styled-components';
 
-function AddLinkModal({ toggleModal }) {
+function AddLinkModal({ toggleModal, setLinks }) {
 	const [title, setTitle] = useState('');
 	const [link, setLink] = useState('');
 	const [groupId, setGroupId] = useState('');
 	const [groups, setGroups] = useState([]);
+	const [errorMessage, setErrorMessage] = useState('');
 
 	useEffect(() => {
 		setGroups(JSON.parse(localStorage.getItem('groups')));
@@ -16,22 +17,27 @@ function AddLinkModal({ toggleModal }) {
 	}, []);
 
 	const createNewLink = () => {
-		localStorage.setItem(
-			'links',
-			JSON.stringify(
-				JSON.parse(localStorage.getItem('links')).concat({
-					title,
-					link,
-					groupId,
-					id: (Math.random() * 100).toFixed(),
-				})
-			)
-		);
+		const prevLinks = JSON.parse(localStorage.getItem('links'));
+		const newLink = {
+			title,
+			link,
+			groupId,
+			id: (Math.random() * 100).toFixed(),
+		};
+		setLinks(prevLinks.concat(newLink));
+		localStorage.setItem('links', JSON.stringify(prevLinks.concat(newLink)));
+	};
+
+	const handleValid = () => {
+		title.trim().length || link.trim().length
+			? setErrorMessage('Please enter valid information')
+			: setErrorMessage('');
 	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		createNewLink();
+		handleValid();
+		errorMessage.trim().length && createNewLink();
 	};
 
 	return (
@@ -48,12 +54,12 @@ function AddLinkModal({ toggleModal }) {
 					/>
 				</IconWrapper>
 				<ModalTitle>Add new Link</ModalTitle>
+				{!errorMessage.trim().length && <p>{errorMessage}</p>}
 				<Form action="">
 					<TextInput
 						value={title}
 						type="text"
 						name="title"
-						id="title"
 						placeholder="Title"
 						onChange={(e) => setTitle(e.target.value)}
 					/>
@@ -62,13 +68,11 @@ function AddLinkModal({ toggleModal }) {
 						value={link}
 						type="text"
 						name="title"
-						id="title"
 						onChange={(e) => setLink(e.target.value)}
 					/>
 					<Select
 						value={groupId}
 						name="group"
-						id="group"
 						onChange={(e) => setGroupId(e.target.value)}>
 						{groups.map((group) => (
 							<option key={group.id} value={group.id}>

@@ -29,7 +29,9 @@ const MainContent = ({ groupId }) => {
 				/>
 				<Button handleClick={() => toggleModal()} />
 			</HeaderWrapper>
-			{isModalOpen && <AddLinkModal toggleModal={toggleModal} />}
+			{isModalOpen && (
+				<AddLinkModal setLinks={setLinks} toggleModal={toggleModal} />
+			)}
 			<CardListWrapper>
 				{groupId === 'null'
 					? searchText === ''
