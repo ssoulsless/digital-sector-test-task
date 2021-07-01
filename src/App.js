@@ -1,26 +1,22 @@
-import { useState } from 'react';
-import AddLinkModal from './components/AddLinkModal';
-import Button from './components/Button';
-import LinkCard from './components/LinkCard';
-import SideNavigation from './components/SideNavigation';
+import SideNavigation from './layout/SideNavigation';
+import MainContent from './layout/MainContent';
+import { useLocalStorage } from './utils/hooks';
+
+import styled from 'styled-components';
 
 function App() {
-	const [isModalOpen, setIsModalOpen] = useState(false);
-
-	const toggleModal = () => {
-		setIsModalOpen(!isModalOpen);
-	};
-
+	const [groupId, setGroupId] = useLocalStorage('selectedGroupId', null);
 	return (
-		<div className="App">
-			<SideNavigation />
-			<div>
-				<LinkCard></LinkCard>
-			</div>
-			<Button toggleModal={() => toggleModal()} />
-			{isModalOpen && <AddLinkModal />}
-		</div>
+		<Wrapper className="App">
+			<SideNavigation groupId={groupId} setGroupId={(e) => setGroupId(e)} />
+			<MainContent groupId={groupId} />
+		</Wrapper>
 	);
 }
+
+const Wrapper = styled.div`
+	display: flex;
+	flex-direction: row;
+`;
 
 export default App;
