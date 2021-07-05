@@ -9,32 +9,38 @@ function App() {
 	const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
 
 	useEffect(() => {
-		!localStorage.getItem('links') &&
-			localStorage.setItem('links', JSON.stringify(links));
-		!localStorage.getItem('groups') &&
-			localStorage.setItem('groups', JSON.stringify(groups));
-		localStorage.setItem('selectedGroupId', 'null');
-		return () => {};
+		if (!localStorage.getItem('links') || !localStorage.getItem('groups')) {
+			localStorage.setItem('links', JSON.stringify(defualtLinks));
+			localStorage.setItem('groups', JSON.stringify(defaultGroups));
+		}
+		setLinks(localStorage.getItem('links'));
+		setGroups(localStorage.getItem('groups'));
+		setGroupId('null');
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const [groupId, setGroupId] = useLocalStorage('selectedGroupId', null);
+	const [links, setLinks] = useState('');
+	const [groups, setGroups] = useState('');
+	const [groupId, setGroupId] = useLocalStorage('selectedGroupId');
 	return (
-		<Wrapper className="App">
-			{isSideMenuOpen && (
-				<SideNavigation
-					isSideMenuOpen={isSideMenuOpen}
-					setIsSideMenuOpen={() => setIsSideMenuOpen()}
-					groupId={groupId}
-					setGroupId={(e) => setGroupId(e)}
-				/>
-			)}
+		!(!links.trim().length || !groups.trim().length) && (
+			<Wrapper className="App">
+				{isSideMenuOpen && (
+					<SideNavigation
+						isSideMenuOpen={isSideMenuOpen}
+						setIsSideMenuOpen={() => setIsSideMenuOpen()}
+						groupId={groupId}
+						setGroupId={(e) => setGroupId(e)}
+					/>
+				)}
 
-			<MainContent
-				isSideMenuOpen={isSideMenuOpen}
-				setIsSideMenuOpen={(e) => setIsSideMenuOpen(e)}
-				groupId={groupId}
-			/>
-		</Wrapper>
+				<MainContent
+					isSideMenuOpen={isSideMenuOpen}
+					setIsSideMenuOpen={(e) => setIsSideMenuOpen(e)}
+					groupId={groupId}
+				/>
+			</Wrapper>
+		)
 	);
 }
 
@@ -45,7 +51,7 @@ const Wrapper = styled.div`
 
 export default App;
 
-const links = [
+const defualtLinks = [
 	{
 		title: 'Google',
 		link: 'http://google.com',
@@ -78,7 +84,7 @@ const links = [
 	},
 ];
 
-const groups = [
+const defaultGroups = [
 	{
 		title: 'Important',
 		id: 'a1',
