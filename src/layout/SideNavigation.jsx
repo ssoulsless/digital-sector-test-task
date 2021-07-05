@@ -5,7 +5,12 @@ import styled from 'styled-components';
 import Icon from '@mdi/react';
 import { mdiClose } from '@mdi/js';
 
-function SideNavigation({ groupId, setGroupId }) {
+function SideNavigation({
+	groupId,
+	setGroupId,
+	isSideMenuOpen,
+	setIsSideMenuOpen,
+}) {
 	const [groups, setGroups] = useState([]);
 
 	useEffect(() => {
@@ -16,7 +21,7 @@ function SideNavigation({ groupId, setGroupId }) {
 		<NavWrapper>
 			<HeaderWrapper>
 				<HeaderTitle>Groups:</HeaderTitle>
-				<IconWrapper onClick={() => setGroupId('null')}>
+				<IconWrapper onClick={() => setIsSideMenuOpen(false)}>
 					<Icon
 						path={mdiClose}
 						title="close"
@@ -27,6 +32,9 @@ function SideNavigation({ groupId, setGroupId }) {
 					/>
 				</IconWrapper>
 			</HeaderWrapper>
+			<div onClick={() => setGroupId('null')}>
+				<SideNavGroup title="All" isSelected={groupId === 'null'} />
+			</div>
 			{groups.map((group) => (
 				<div key={group.id} onClick={() => setGroupId(group.id)}>
 					<SideNavGroup title={group.title} isSelected={groupId === group.id} />
@@ -37,9 +45,14 @@ function SideNavigation({ groupId, setGroupId }) {
 }
 
 const NavWrapper = styled.div`
-	flex: 1;
 	background-color: #101b27;
 	height: 100vh;
+	@media (max-width: 756px) {
+		z-index: 2;
+		position: fixed;
+		width: 80%;
+	}
+	flex: 1;
 `;
 const HeaderWrapper = styled.div`
 	margin-top: 16px;
@@ -60,5 +73,8 @@ const IconWrapper = styled.div`
 		transform: translateY(-3px);
 		cursor: pointer;
 	}
+	display: flex;
+	justify-content: center;
+	align-items: center;
 `;
 export default SideNavigation;

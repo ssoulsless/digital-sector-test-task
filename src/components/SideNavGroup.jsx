@@ -15,6 +15,7 @@ const GroupTitle = styled.h4`
 	text-align: center;
 	margin: 0;
 	padding: 0 8px;
+	flex-wrap: wrap;
 `;
 const GroupWrapper = styled.div`
 	border: 0.5px groove #c4ddd3;

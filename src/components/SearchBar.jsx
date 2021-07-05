@@ -20,18 +20,22 @@ const SearchBarWrapper = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	margin: 0 16px;
-	flex: 1;
+	margin: 0 8px 0 5px;
+	height: 53px;
+	flex: 4;
+	min-width: 10%;
 `;
 const SearchBarInput = styled.input`
+	margin-top: 16px;
 	border-radius: 15px;
 	border-width: 0;
 	font-size: 18px;
 	outline: none;
 	color: #d3d3d3;
+	height: 100%;
 	background-color: #65717c;
-	padding: 16px;
-	margin-top: 16px;
+	padding: 0 8px;
+	width: 10%;
 	flex: 1;
 	::placeholder {
 		color: #d3d3d3;

@@ -6,7 +6,10 @@ import LinkCard from '../components/LinkCard';
 import styled from 'styled-components';
 import SearchBar from '../components/SearchBar';
 
-const MainContent = ({ groupId }) => {
+import Icon from '@mdi/react';
+import { mdiMenu } from '@mdi/js';
+
+const MainContent = ({ groupId, setIsSideMenuOpen, isSideMenuOpen }) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [links, setLinks] = useState([]);
 	const [searchText, setSearchText] = useState('');
@@ -23,6 +26,18 @@ const MainContent = ({ groupId }) => {
 	return (
 		<ContentWrapper>
 			<HeaderWrapper>
+				{!isSideMenuOpen && (
+					<MenuIconWrapper onClick={() => setIsSideMenuOpen(true)}>
+						<Icon
+							path={mdiMenu}
+							title="close"
+							size={2}
+							color="#e6e9ec"
+							horizontal
+							vertical
+						/>
+					</MenuIconWrapper>
+				)}
 				<SearchBar
 					searchText={searchText}
 					setSearchText={(e) => setSearchText(e)}
@@ -64,8 +79,16 @@ const MainContent = ({ groupId }) => {
 	);
 };
 
+const MenuIconWrapper = styled.div`
+	padding-top: 16px;
+	background-color: #060e1b;
+	&:hover {
+		cursor: pointer;
+		transform: translateY(-3px);
+	}
+`;
 const CardListWrapper = styled.div`
-	margin: 16px 16px;
+	margin: 16px 8px;
 	display: grid;
 	grid-template-columns: repeat(1, 1fr);
 	grid-gap: 1rem;
@@ -81,6 +104,7 @@ const CardListWrapper = styled.div`
 `;
 const ContentWrapper = styled.div`
 	flex: 4;
+	height: 100vh;
 	background-color: #060e1b;
 	display: flex;
 	flex-direction: column;
@@ -88,6 +112,8 @@ const ContentWrapper = styled.div`
 const HeaderWrapper = styled.div`
 	display: flex;
 	justify-content: space-between;
+	flex-direction: row;
+	align-items: center;
 `;
 
 export default MainContent;

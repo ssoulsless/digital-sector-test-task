@@ -7,7 +7,7 @@ import styled from 'styled-components';
 function AddLinkModal({ toggleModal, setLinks }) {
 	const [title, setTitle] = useState('');
 	const [link, setLink] = useState('');
-	const [groupId, setGroupId] = useState('');
+	const [groupId, setGroupId] = useState('a1');
 	const [groups, setGroups] = useState([]);
 	const [errorMessage, setErrorMessage] = useState('');
 
@@ -26,18 +26,25 @@ function AddLinkModal({ toggleModal, setLinks }) {
 		};
 		setLinks(prevLinks.concat(newLink));
 		localStorage.setItem('links', JSON.stringify(prevLinks.concat(newLink)));
+		toggleModal();
 	};
 
 	const handleValid = () => {
-		title.trim().length || link.trim().length
-			? setErrorMessage('Please enter valid information')
-			: setErrorMessage('');
+		if (!title.trim().length || !link.trim().length) {
+			setErrorMessage('Please enter valid information');
+			return false;
+		} else if (title.trim().length >= 30) {
+			setErrorMessage('Title and Link length must be less than 30 characters');
+			return false;
+		} else {
+			setErrorMessage('');
+			return true;
+		}
 	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		handleValid();
-		errorMessage.trim().length && createNewLink();
+		handleValid() && createNewLink();
 	};
 
 	return (
@@ -54,21 +61,29 @@ function AddLinkModal({ toggleModal, setLinks }) {
 					/>
 				</IconWrapper>
 				<ModalTitle>Add new Link</ModalTitle>
-				{!errorMessage.trim().length && <p>{errorMessage}</p>}
+				{errorMessage.trim().length ? (
+					<ErrorMessage>{errorMessage}</ErrorMessage>
+				) : null}
 				<Form action="">
 					<TextInput
 						value={title}
 						type="text"
 						name="title"
 						placeholder="Title"
-						onChange={(e) => setTitle(e.target.value)}
+						onChange={(e) => {
+							setTitle(e.target.value);
+							errorMessage.trim().length && handleValid();
+						}}
 					/>
 					<TextInput
 						placeholder="Link"
 						value={link}
 						type="text"
 						name="title"
-						onChange={(e) => setLink(e.target.value)}
+						onChange={(e) => {
+							setLink(e.target.value);
+							errorMessage.trim().length && handleValid();
+						}}
 					/>
 					<Select
 						value={groupId}
@@ -89,6 +104,7 @@ function AddLinkModal({ toggleModal, setLinks }) {
 
 const ModalTitle = styled.h4`
 	margin: 12px 0 24px;
+	font-size: 22px;
 `;
 const ModalContent = styled.div`
 	background-color: #65717c;
@@ -96,6 +112,9 @@ const ModalContent = styled.div`
 	padding: 16px;
 	display: flex;
 	flex-direction: column;
+	@media (max-width: 756px) {
+		width: 80%;
+	}
 `;
 const Modal = styled.div`
 	text-align: center;
@@ -114,17 +133,19 @@ const Form = styled.form`
 `;
 const TextInput = styled.input`
 	list-style: none;
+	font-size: 18px;
 	outline: none;
 	margin: 4px;
 	background-color: #e6e9ec;
 	border: none;
-	padding: 4px;
+	padding: 8px;
 	border-radius: 3px;
 `;
 const Select = styled.select`
 	background-color: #e6e9ec;
 	border: none;
-	padding: 4px;
+	padding: 8px;
+	font-size: 18px;
 	border-radius: 3px;
 	margin: 4px;
 	outline: none;
@@ -132,12 +153,17 @@ const Select = styled.select`
 const Submit = styled.input`
 	background-color: #e6e9ec;
 	border: none;
-	padding: 4px;
+	padding: 8px;
+	font-size: 18px;
 	border-radius: 3px;
 	margin: 4px;
 `;
 const IconWrapper = styled.div`
 	align-self: flex-end;
+`;
+
+const ErrorMessage = styled.p`
+	color: #a01b1b;
 `;
 
 export default AddLinkModal;

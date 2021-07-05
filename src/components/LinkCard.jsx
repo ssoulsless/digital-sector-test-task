@@ -26,6 +26,8 @@ const CardWrapper = styled.div`
 const CardTitle = styled.h4`
 	color: #c4ddd3;
 	margin: 8px 0;
+	max-width: 100%;
+	flex-wrap: wrap;
 `;
 const CardLink = styled.a`
 	color: #88afa0;

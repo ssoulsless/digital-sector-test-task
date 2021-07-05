@@ -3,9 +3,11 @@ import MainContent from './layout/MainContent';
 import { useLocalStorage } from './utils/hooks';
 
 import styled from 'styled-components';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 function App() {
+	const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
+
 	useEffect(() => {
 		!localStorage.getItem('links') &&
 			localStorage.setItem('links', JSON.stringify(links));
@@ -13,11 +15,24 @@ function App() {
 			localStorage.setItem('groups', JSON.stringify(groups));
 		return () => {};
 	}, []);
+
 	const [groupId, setGroupId] = useLocalStorage('selectedGroupId', null);
 	return (
 		<Wrapper className="App">
-			<SideNavigation groupId={groupId} setGroupId={(e) => setGroupId(e)} />
-			<MainContent groupId={groupId} />
+			{isSideMenuOpen && (
+				<SideNavigation
+					isSideMenuOpen={isSideMenuOpen}
+					setIsSideMenuOpen={() => setIsSideMenuOpen()}
+					groupId={groupId}
+					setGroupId={(e) => setGroupId(e)}
+				/>
+			)}
+
+			<MainContent
+				isSideMenuOpen={isSideMenuOpen}
+				setIsSideMenuOpen={(e) => setIsSideMenuOpen(e)}
+				groupId={groupId}
+			/>
 		</Wrapper>
 	);
 }
