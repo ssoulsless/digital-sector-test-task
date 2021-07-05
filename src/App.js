@@ -13,6 +13,7 @@ function App() {
 			localStorage.setItem('links', JSON.stringify(links));
 		!localStorage.getItem('groups') &&
 			localStorage.setItem('groups', JSON.stringify(groups));
+		localStorage.setItem('selectedGroupId', 'null');
 		return () => {};
 	}, []);
 
